@@ -38,12 +38,7 @@ def minstall():
  if not Path(f'{home}/MediaWiki').is_dir():
    os.makedirs(f"{home}/MediaWiki")
  else:
-   print(f"{Fore.YELLOW}Warning:{Style.RESET_ALL} MediaWiki is already installed! Trying to install MediaWiki again after installing it may\n{Fore.RED}clear your wiki{Style.RESET_ALL}. Proceed with caution.")
-   questions = [
-      inquirer.Confirm("confirm", message="Are you sure you want to reinstall MediaWiki?", default=False),
-   ]
-   answer = inquirer.prompt(questions)
-   if str(answer) == str("{'confirm': True}"):
+   if backtoinst == "Y":
      file_path = f"{home}/MediaWiki"
      try:
          if os.path.isfile(file_path) or os.path.islink(file_path):
@@ -54,7 +49,21 @@ def minstall():
          print('Failed to delete %s. Reason: %s' % (file_path, e))
          exit(1)
    else:
-     exit()
+     print(f"{Fore.YELLOW}Warning:{Style.RESET_ALL} MediaWiki is already installed! Trying to install MediaWiki again after installing it may\n{Fore.RED}clear your wiki{Style.RESET_ALL}. Proceed with caution.")
+     questions = [
+        inquirer.Confirm("confirm", message="Are you sure you want to reinstall MediaWiki?", default=False),
+     ]
+     rianswer = inquirer.prompt(questions)
+     if str(rianswer) == str("{'confirm': True}"):
+       file_path = f"{home}/MediaWiki"
+       try:
+         if os.path.isfile(file_path) or os.path.islink(file_path):
+             os.unlink(file_path)
+         elif os.path.isdir(file_path):
+             shutil.rmtree(file_path)
+       except Exception as e:
+         print('Failed to delete %s. Reason: %s' % (file_path, e))
+         exit(1)
  print("These will be installed:")
  print("    1: Database (SQLite)")
  print("    2: MediaWiki")
@@ -130,9 +139,10 @@ print("Choose a mode:")
 print(f"    1: {Fore.GREEN}Install{Style.RESET_ALL} MediaWiki 1.37 and the required software")
 print(f"    2: {Fore.RED}Uninstall{Style.RESET_ALL} the current MediaWiki")
 print("Or, type 'q' to quit")
-mode = "0" # Prevents "NameError: name 'mode' is not defined"
+
 try:
   while True:
+    mode = "0"
     mode = input("\nChoose mode: ")
     if mode == "1":
       minstall()
@@ -151,6 +161,7 @@ except KeyboardInterrupt:
       exit()
    else:
     if mode == "1":
+      backtoinst = "Y"
       minstall()
     elif mode == "2":
       byemw()
