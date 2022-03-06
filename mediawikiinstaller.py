@@ -1,7 +1,6 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 #          MediaWiki Installer Program              #
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-#                                                   #
 # Purpose: Helps you instantly and automatically    #
 #          install MediaWiki (because Wikimedia     #
 #          wouldn't).                               #
