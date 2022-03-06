@@ -12,6 +12,7 @@ try:
   import inquirer
 except:
   os.system("python -m pip install inquirer")
+  import inquirer
 from pathlib import Path
 home = str(Path.home())
 
