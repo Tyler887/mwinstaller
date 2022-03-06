@@ -66,19 +66,6 @@ def minstall():
     if not Path(f"{home}/MediaWiki").is_dir():
         os.makedirs(f"{home}/MediaWiki")
     else:
-        if backtoinst == "Y":
-            file_path = f"{home}/MediaWiki"
-            try:
-                if os.path.isfile(file_path) or os.path.islink(file_path):
-                    os.unlink(file_path)
-                elif os.path.isdir(file_path):
-                    shutil.rmtree(file_path)
-                if os.name == "nt":
-                    os.system("scoop reset apache php/php7.4 sqlite")
-            except Exception as e:
-                print("Failed to delete %s. Reason: %s" % (file_path, e))
-                exit(1)
-        else:
             print(
                 f"{Fore.YELLOW}Warning:{Style.RESET_ALL} MediaWiki is already installed! Trying to install MediaWiki again after installing it may\n{Fore.RED}clear your wiki{Style.RESET_ALL}. Proceed with caution."
             )
@@ -98,7 +85,7 @@ def minstall():
                     elif os.path.isdir(file_path):
                         shutil.rmtree(file_path)
                     if os.name == "nt":
-                        os.system("scoop reset apache php/php7.4 sqlite")
+                        os.system("scoop reset apache php/php7.4 sqlite composer")
                 except Exception as e:
                     print("Failed to delete %s. Reason: %s" % (file_path, e))
                     exit(1)
@@ -109,6 +96,7 @@ def minstall():
     print("    2: MediaWiki")
     print("    3: Server (Apache)")
     print("    4: PHP")
+    print("This includes what you need to use MW. We need Composer (this IS NOT Docker-related but PHP-related, see\nhttps://www.mediawiki.org/wiki/Composer).")
     os.system("powershell -c Set-ExecutionPolicy RemoteSigned -scope CurrentUser")
     os.system(
         "powershell -c Invoke-Expression (New-Object System.Net.WebClient).DownloadString('https://get.scoop.sh')"
@@ -117,11 +105,11 @@ def minstall():
     if is_admin():
         print("> scoop bucket add extras")
         os.system("scoop bucket add extras")
-        print("> scoop install php/php7.4 sqlite apache extras/vcredist2019")
-        os.system("scoop install php/php7.4 sqlite apache extras/vcredist2019")
+        print("> scoop install php/php7.4 sqlite apache extras/vcredist2019 composer")
+        os.system("scoop install php/php7.4 sqlite apache extras/vcredist2019 composer")
     else:
-        print("> scoop install php/php7.4 sqlite apache")
-        os.system("scoop install php/php7.4 sqlite apache")
+        print("> scoop install php/php7.4 sqlite apache composer")
+        os.system("scoop install php/php7.4 sqlite apache composer")
     if os.name != "nt":
         print(
             "See the MediaWiki documentation for the MediaWiki installation requirements:\nhttps://www.mediawiki.org/wiki/Special:MyLanguage/Manual:Installation_requirements"
@@ -141,7 +129,7 @@ def minstall():
                 dl += len(data)
                 f.write(data)
                 done = int(50 * dl / total_length)
-                sys.stdout.write("\r[%s%s]" % ("#" * done, ":" * (50 - done)))
+                sys.stdout.write("\r[%s%s]" % (f"{Fore.GREEN}#{Style.RESET_ALL}" * done, f"{Fore.RED}#{Style.RESET_ALL}" * (50 - done)))
                 sys.stdout.flush()
     new = f"{home}/MediaWiki"
     print(" Done!\n")
@@ -151,6 +139,9 @@ def minstall():
         zip_ref.extractall(new)
     os.unlink(file_name)
     if os.name == "nt":
+        print("Please wait...")
+        os.system("composer i openssl")
+        os.system(f"composer i -d {home}\MediaWiki\mediawiki-1.37.1")
         httpdfile = f"{home}\httpd.conf"
         print("Configuring Apache HTTP Server...")
         with open(f"{home}\MediaWiki\httpd.conf", "w") as f:
@@ -204,24 +195,5 @@ try:
             exit()
         else:
             print(f"Invalid input: {mode}. Please choose 1 or 2. Or, type 'q' to quit.")
-# Ctrl+C confirmation
 except KeyboardInterrupt:
-    questions = [
-        inquirer.Confirm(
-            "confirm", message="Are you sure you want to exit?", default=False
-        ),
-    ]
-    answer = inquirer.prompt(questions)
-    if str(answer) == str("{'confirm': True}"):
-        exit()
-    else:
-        if mode == "1":
-            backtoinst = "Y"
-            minstall()
-        elif mode == "2":
-            byemw()
-        else:
-            scriptfile = __file__
-            os.system(f"python3 {scriptfile}")
-
-            exit()
+  exit()
