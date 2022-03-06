@@ -1,3 +1,10 @@
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#          MediaWiki Installer Program              #
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
+#####################################################
+####################### INIT ########################
+#####################################################
 import os
 import sys
 import ctypes
@@ -147,7 +154,7 @@ print("Choose a mode:")
 print(f"    1: {Fore.GREEN}Install{Style.RESET_ALL} MediaWiki 1.37 and the required software")
 print(f"    2: {Fore.RED}Uninstall{Style.RESET_ALL} the current MediaWiki")
 print("Or, type 'q' to quit")
-
+       ### Choose Mode ## 
 try:
   while True:
     mode = "0"
@@ -160,6 +167,7 @@ try:
       exit()
     else:
       print(f"Invalid input: {mode}. Please choose 1 or 2. Or, type 'q' to quit.")
+# Ctrl+C confirmation
 except KeyboardInterrupt:
    questions = [
       inquirer.Confirm("confirm", message="Are you sure you want to exit?", default=False),
