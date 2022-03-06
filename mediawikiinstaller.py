@@ -14,7 +14,7 @@ except:
   import inquirer
 from pathlib import Path
 home = str(Path.home())
-
+backtoinst = "N"
 print(f"{Fore.GREEN}MediaWiki installer{Style.RESET_ALL} (unofficial) developer release")
 print(f"{Fore.RED}Disclaimer:{Style.RESET_ALL} Wikimedia does NOT own this installer. Plus,")
 print("            MediaWiki is PHP, so it will be installed.")
@@ -45,6 +45,8 @@ def minstall():
              os.unlink(file_path)
          elif os.path.isdir(file_path):
              shutil.rmtree(file_path)
+         if os.name == "nt":
+             os.system("scoop reset apache php/php7.4 sqlite")
      except Exception as e:
          print('Failed to delete %s. Reason: %s' % (file_path, e))
          exit(1)
@@ -61,9 +63,13 @@ def minstall():
              os.unlink(file_path)
          elif os.path.isdir(file_path):
              shutil.rmtree(file_path)
+         if os.name == "nt":
+             os.system("scoop reset apache php/php7.4 sqlite")
        except Exception as e:
          print('Failed to delete %s. Reason: %s' % (file_path, e))
          exit(1)
+     else:
+       exit()
  print("These will be installed:")
  print("    1: Database (SQLite)")
  print("    2: MediaWiki")
@@ -118,6 +124,8 @@ def byemw():
       try:
         file_path = f"{home}/MediaWiki"
         if os.name == "nt":
+           print("Telling Apache to shutdown the wiki server...")
+           os.system("httpd -k shutdown")
            print("Uninstalling software...")
            if is_admin():
              os.system("scoop uninstall php/php7.4 sqlite apache extras/vcredist2019")
