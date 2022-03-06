@@ -151,4 +151,12 @@ except KeyboardInterrupt:
    if str(answer) == str("{'confirm': True}"):
       exit()
    else:
-      pass
+    if mode == "1":
+      minstall()
+    elif mode == "2":
+      byemw()
+    else:
+      scriptfile = __file__
+      os.system(f"python3 {scriptfile}")
+      
+    exit()
