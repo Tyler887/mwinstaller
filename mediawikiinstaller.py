@@ -130,12 +130,25 @@ def byemw():
 print("Choose a mode:")
 print(f"    1: {Fore.GREEN}Install{Style.RESET_ALL} MediaWiki 1.37 and the required software")
 print(f"    2: {Fore.RED}Uninstall{Style.RESET_ALL} the current MediaWiki")
+print("Or, type 'q' to quit")
 mode = "0" # Prevents "NameError: name 'mode' is not defined"
-while mode != "1" and mode != "2":
-  mode = input("\nChoose mode: ")
-  if mode == "1":
-    minstall()
-  elif mode == "2":
-    byemw()
-  else:
-    print(f"Invalid input: {mode}. Please choose 1 or 2.")
+try:
+  while True:
+    mode = input("\nChoose mode: ")
+    if mode == "1":
+      minstall()
+    elif mode == "2":
+      byemw()
+    elif mode == "q":
+      exit()
+    else:
+      print(f"Invalid input: {mode}. Please choose 1 or 2. Or, type 'q' to quit.")
+except KeyboardInterrupt:
+   questions = [
+      inquirer.Confirm("confirm", message="Are you sure you want to exit?", default=False),
+   ]
+   answer = inquirer.prompt(questions)
+   if str(answer) == str("{'confirm': True}"):
+      exit()
+   else:
+      pass
