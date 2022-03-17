@@ -47,7 +47,10 @@ print(
 print(
     f"{Fore.RED}Disclaimer:{Style.RESET_ALL} Wikimedia does NOT own this installer. Plus,"
 )
-print("            MediaWiki is PHP, so it will be installed.")
+if os.name == "nt":
+    print("            MediaWiki is PHP, so it will be installed.")
+else:
+    print("            MediaWiki is PHP, so it you MUST install it unless it is already installed.")
 try:
     import requests
 except ImportError:
